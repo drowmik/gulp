@@ -13,6 +13,19 @@
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^6.1.0",
     "gulp-pug": "^4.0.1",
-    "gulp-sass": "^4.0.2"
-  }
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-uglifycss": "^1.1.0"
+  },
+  "browserslist": [
+    "last 10 versions",
+    "cover 99.5%",
+    "Firefox > 35",
+    "Firefox ESR",
+    "safari 5",
+    "ie 8-11",
+    "opera 12.1",
+    "ios 6",
+    "android 4"
+  ]
 }
