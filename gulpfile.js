@@ -1,8 +1,9 @@
 const gulp = require('gulp');
+const plumber = require('gulp-plumber');
+const notify = require('gulp-notify');
 const sass = require('gulp-sass');
 const rename = require('gulp-rename');
 const auto_prefixer = require('gulp-autoprefixer');
-const uglify_css = require('gulp-uglifycss');
 const browser_sync = require('browser-sync').create();
 
 
@@ -11,17 +12,29 @@ function style() {
     return gulp.src('./src/scss/*.scss')
 
     // pass those file to sass compiler
-        .pipe(sass())
+        .pipe(sass({
+            // outputStyle:'expanded'
+            outputStyle:'compressed'
+        }))
+
+    // error message handler
+		.pipe(plumber({
+            // show notification
+			errorHandler: notify.onError({
+				title: 'SASS',
+				message: 'Error: <%= error.message %>'
+			})
+		}))
 
     // css prefix for browsers compatibility (browsers listed on package.json)
         .pipe(auto_prefixer())
-    
-    // minify css file
-		.pipe(uglify_css())
 
     // rename output file
         .pipe(rename({suffix: '.min'}))
-    
+
+    // default behaviour for pipeline after it was piped
+        .pipe(plumber.stop())
+
     // set compiled css file location
         .pipe(gulp.dest('./build/css'))
 
