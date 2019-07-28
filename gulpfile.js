@@ -2,6 +2,7 @@ const gulp = require('gulp');
 const plumber = require('gulp-plumber');
 const notify = require('gulp-notify');
 const sass = require('gulp-sass');
+const pug = require('gulp-pug');
 const rename = require('gulp-rename');
 const auto_prefixer = require('gulp-autoprefixer');
 const browser_sync = require('browser-sync').create();
@@ -42,7 +43,26 @@ function style() {
         .pipe(browser_sync.stream());
 }
 
+function template() {
+    return gulp.src('src/pug/*.pug')
+        .pipe(plumber({
+            errorHandler: notify.onError({
+                title: 'PUG',
+                message: 'Error: <%= error.message %>'
+            })
+        }))
+        .pipe(pug({
+            pretty: '\t'
+        }))
+        .pipe(gulp.dest('./build'))
+        .pipe(browser_sync.stream());
+}
+
 function watch() {
+    // initial process
+    template();
+    style();
+
     browser_sync.init({
         server: {
             baseDir: './build'
@@ -51,9 +71,10 @@ function watch() {
 
     // watch for these file changes
     gulp.watch('./src/scss/**/*.scss', style);
-    gulp.watch('./build/*.html').on('change', browser_sync.reload);
+    gulp.watch('./src/pug/*.pug', template);
     gulp.watch('./build/*.js').on('change', browser_sync.reload);
 }
 
 exports.style = style;
+exports.template = template;
 exports.watch = watch;
