@@ -12,12 +12,6 @@ function style() {
     // scss file location
     return gulp.src('./src/scss/*.scss')
 
-    // pass those file to sass compiler
-        .pipe(sass({
-            // outputStyle:'expanded'
-            outputStyle:'compressed'
-        }))
-
     // error message handler
 		.pipe(plumber({
             // show notification
@@ -26,6 +20,12 @@ function style() {
 				message: 'Error: <%= error.message %>'
 			})
 		}))
+
+    // pass scss files to sass compiler
+        .pipe(sass({
+            // outputStyle:'expanded'
+            outputStyle:'compressed'
+        }))
 
     // css prefix for browsers compatibility (browsers listed on package.json)
         .pipe(auto_prefixer())
@@ -54,6 +54,7 @@ function template() {
         .pipe(pug({
             pretty: '\t'
         }))
+        .pipe(plumber.stop())
         .pipe(gulp.dest('./build'))
         .pipe(browser_sync.stream());
 }
